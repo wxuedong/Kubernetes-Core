@@ -153,3 +153,42 @@ Kubernetes 使用Kubernetes API 自动化进行管理所有技术栈，可以完
 * 管理应用部署，同时最大程度地减少面向用户的停机时间，无论是单个主机，服务还是应用程序
 
 * 实现内部和外部访问负载均衡集成（称为clusterip，nodeport或Load Balancer Service类型）
+
+* 提供应用程序可以调度到特定的Node
+
+* 通过Daemonset 部署可以部署到集群所有Node上
+
+* 允许通过Kube DNS和最近由Coredns实施的域名服务（DNS）进行服务发现，该服务与API服务器集成在一起
+
+* 包括API扩展名并使用自定义资源实现定义构建符合业务需求程序
+
+* 可以通过Kubectl exec和Kubectl Descript检测任何失败的资源包含整个过程，包括远程执行到任何容器中。
+
+* 允许将本地和/或远程存储安装到容器上，并管理具有Storageclass API和PersistentVolumes的容器的声明存储量
+
+Kubernetes的作用绝不是微不足道的。它标准化了在同一集群中或在同一集群中运行的多个应用程序的生命周期管理。Kubernetes的基础是由节点组成的集群。诚然，Kubernetes的复杂性是工程师对Kubernetes的抱怨之一。社区正在努力使其更容易，这是Kubernetes正在解决一个复杂的问题。
+
+<center><img src="./images/cluster.jpg"></center><br />
+
+如果您不需要高可用性，可扩展性和编排能力，那么也许您不需要Kubernetes。现在，让我们考虑一个集群中的典型故障情况：
+
+* 一个节点心跳停止响应到Master
+
+* Node 出现网络延迟 Master降这个Node上的Pod重新调度到新的Node上
+
+* 当用户通过kubectl将API调用到API server中时，API server以有关未响应的节点和PodS的新位置的正确信息进行响应
+
+* 所有的客户端与Pod 的Service 进行交互都会路由到新的地址
+
+* 失败节点上的Pods附加的存储量移至新的Pod位置，以使其旧数据仍然可读
+
+这本书的目的是使您更深入了解所有这些如何真正在底层运作，以及基础Linux 低层如何补充高级Kubernetes组件以完成这些任务。Kubernetes在很大程度上依赖Linux堆栈中的技术，这些技术通常很难学习并且缺乏深厚的文档。我们希望通过阅读这本书，您会了解许多Kubernetes的微妙之处，这些细微之处在工程师首次使用的教程中经常被忽略
+
+在不变的操作系统上运行Kubernetes是很自然的。您有一个基本操作系统，仅在更新整个操作系统时才更新（因此是不可变的），然后使用该操作系统安装节点/kubernetes。运行不变的操作系统有许多优势，我们在这里不会介绍。您可以在云中，裸金属服务器，甚至在Raspberry Pi上运行Kubernetes。实际上，美国国防部目前正在研究如何在其一些战斗机上运行Kubernetes。IBM甚至支持在其下一代大型机上运行集群，PowerPCS
+
+
+随着Kubernetes周围的云本地生态系统持续完善和成熟，它将继续允许组织确定最佳实践，主动进行更改以防止问题，并保持环境的一致性，以避免‘漂移’，其中一些机器与其他机器的行为略有不同因为补丁是有差异的错过，未应用或不适当地应用
+
+## Kubernetes 组件架构实现
+
+//TODO
