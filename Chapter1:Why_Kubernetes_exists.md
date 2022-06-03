@@ -191,3 +191,97 @@ Kubernetes的作用绝不是微不足道的。它标准化了在同一集群中�
 
 ## Kubernetes 组件架构实现
 
+现在，让我们花点时间看一下高级别的Kubernetes架构。简而言之，它由您的硬件和运行Kubernetes控制平面的硬件的部分组成以及Kubernetes Worker Nodes：
+
+<center><img src="./images/components.jpg"></center><br />
+
+* 硬件设施: 括计算机，网络基础架构，存储基础架构和容器镜像仓库
+* Kubernetes worker nodes: Kubernetes集群中计算的基本单位，用来调度Pood运行容器
+* Kubernetes control plane: Kubernetes 大脑，API-server、scheduler、controller-manager
+
+
+### Kubernetes API
+
+如果本章有一件重要的事情要使您能够在本书中进行深入的旅程，那么在Kubernetes平台上管理微服务和其他容器化软件应用程序只是宣布Kubernetes API对象的问题。在大多数情况下，其他一切都为您完成
+
+这本书将深入研究API服务器及其数据存储等。您几乎可以要求Kubectl在API server中使用定义和版本的对象进行读取或写作。（此类例外是使用kubectl捕获运行pod的日志，其中该连接被代理到节点。）kube-apiserver（kubernetes api server）允许CRUD（创建，读取，读取，更新和删除））在所有对象上操作，并提供一个恢复的（表示状态传输）接口。一些kubectl命令（例如describe）是多个对象的复合视图。通常，所有kubernetes api对象都有:
+
+* API version (比如v1或者rbac.authorization.k8s.io/v1)
+* kind（比如kind: Deployment）
+* 元数据 (metadata)
+
+
+我们可以感谢Kubernetes最初的创始人之一Brian Grant的API验证计划，该计划随着时间的推移而被证明是健壮的。这似乎很复杂，坦率地说，有时会有些痛苦，但是它使我们能够做诸如定义API变化的升级和合同之类的事情。API的变化和迁移通常是不平凡的，Kubernetes为API更改提供了明确定义的合同。查看Kubernetes网站API版本的定义。
+
+在本书的整章中，我们将重点关注Kubernetes，但继续返回基本主题：Kubernetes中的所有内容都存在于支持Pod。在本书中，我们将详细研究几个API元素
+
+* 部署和运行Pods
+* API 实现细节
+* Ingress Services 和负载均衡
+* PersistentVolumes 和 PersistentVolumeClaims 存储
+* 网络策略 和 网络安全
+
+您可以在标准的Kubernetes集群中使用，创建，编辑和删除大约70种不同的API类型。您可以通过运行kubectl api-Resources查看这些内容。输出应该看起来像这样：
+
+```
+$ kubectl api-resources | head
+NAME SHORTNAMES NAMESPACED KIND
+bindings true Binding
+componentstatuses cs false ComponentStatus
+configmaps cm true ConfigMap
+endpoints ep true Endpoints
+events ev true Event
+limitranges limits true LimitRange
+namespaces ns false Namespace
+nodes no false Node
+persistentvolumeclaims pvc true PersistentVolumeClaim
+
+```
+
+我们可以看到，Kubernetes本身的每个API资源都有：
+
+* 一个简单的名字
+* 一个全名
+* 表明它的作用域是否是namespace级别
+
+在kubernetes中，namespace允许特定内部存在某些对象。这为开发人员提供了一种简单的分层分组形式。比如，如果您的应用程序运行了10种不同的微服务，则通常可能创建所有这些Pod，服务和PersistentVolumeClial（也称为PVCS），在同一名称空间内。这样，当您该删除应用程序时，您只需删除名称空间即可。在第15章中，我们将研究分析应用程序生命周期的高级方法，这些方法比这种简单的方法更为先进。但是在许多情况下，namespace是分离与应用程序关联的所有Kubernetes API对象的最明显和直观的解决方案。
+
+### 示例一：在线零售商
+
+想象一下，一家主要的在线零售商需要能够随着季节性的需求而快速扩展，例如假期。扩展和预测如何扩展一直是他们最大的挑战之一 - 也许是最大的挑战。Kubernetes解决了运行高度可扩展的分布式系统所带来的许多问题。想象一下具有缩放，分发和使高度可用系统的能力的可能性。这不仅是经营业务的更好方法，而且还是管理系统管理最有效的平台。在组合Kubernetes和云服务商时，您可以在需要额外资源的情况下运行其他人的服务器，而不是购买和维护额外的硬件，以防万一
+
+
+### 示例二：在线捐赠解决方案
+
+对于值得一提的这一过渡的第二个真实示例，让我们考虑一个在线捐赠网站，该网站可以根据用户的选择为广泛的慈善机构提供贡献。假设这个特定的示例最初是一个WordPress站点，但最终，业务交易导致对JVM Frameworks（如Grails）的全面依赖性，并具有自定义的UX，中间层和数据库层。该业务要求包括机器学习，广告服务，消息传递，Python，Lua，nginx，PHP，Mysql，Mysql，Cassandra，Redis，Redis，Etalastic，Activemq，Spark，Spark，Lions，Lions，Tigers，Tigers和Bears。。。并到此为止。
+
+最初的基础架构是一种手工建造的云虚拟机（VM），使用Puppet来设置所有内容。随着公司的发展，他们为规模设计，但这包括越来越多的VM，仅托管了一两个应用程序。然后他们决定搬到Kubernetes。VM计数从30左右减少到5左右，并更容易缩放。他们完全消除了Puppet和服务器的设置，因此需要手动管理机器基础设施，这要归功于它们的大量使用Kubernetes
+
+该公司向Kubernetes的过渡解决了整个VM管理问题，DNS的复杂服务出版负担等等。此外，从基础设施的角度来看，灾难性失败的情况下的恢复时间更为可预测。当您体验到运转良好的标准化API驱动方法并有能力快速进行大规模更改的好处时，您开始感谢Kubernetes的声明式及其对容器编排的云原生方法
+
+
+## 不适合Kubernetes
+
+当然，在某些情况下，Kubernetes可能不合适所有场景。其中一些包括：
+
+* 高性能计算（High-performance computing ） - 使用容器增加了一层复杂性，并且随着新层的性能命中。使用container创建的延迟越来越小，但是如果您的应用程序受纳米或微秒的影响，使用kubernetes可能不是最好的选择。
+
+* Legacy-某些应用程序具有硬件，软件和延迟要求，使其很难简单地容器化。例如，您可能会从一家软件公司购买的应用程序，该公司不会正式支持在容器中运行或在Kubernetes集群中运行其应用程序。
+
+* Migration- 传统系统的实施可能是如此僵化，以至于将它们迁移到Kubernetes，除了“我们建立在Kubernetes上”之外，几乎没有其他优势。但是，当单片应用程序被解析为逻辑组件时，一些最重要的收益会在迁移之后产生，然后可以彼此独立扩展
+
+这里重要的是：学习并掌握基础知识。Kubernetes以稳定，具有成本敏感的方式解决了本章中提出的许多问题。
+
+## 总结
+
+* kubernetes使您的生活更轻松！
+* Kubernetes平台可以在任何类型的基础架构上运行。
+* Kubernetes建立了共同工作的组件的生态系统。组合组件可以使公司能够预防，恢复和扩展，并在需要紧急更改时实时进行更新。
+* 可以使用一个简单的工具来完成您在Kubernetes中所做的一切：Kubectl。
+
+* Kubernetes从一台或多台计算机创建了一个集群，该集群为部署和主机容器提供了一个平台。它提供容器编排，存储管理和分布式网络。
+* Kubernetes是从以前以配置驱动的以及容器驱动的方法诞生的。
+
+* Pod 是Kubernetes的基本构建单元。它支持Kubernetes允许的无数特性：扩展，故障转移，DNS查找和RBAC安全规则。
+
+* Kubernetes应用程序完全通过简单地调用Kubernetes API服务器来管理。
