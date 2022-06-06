@@ -195,7 +195,7 @@ Kubernetes的作用绝不是微不足道的。它标准化了在同一集群中�
 
 <center><img src="./images/components.jpg"></center><br />
 
-* 硬件设施: 括计算机，网络基础架构，存储基础架构和容器镜像仓库
+* 硬件设施: 包括计算机，网络基础架构，存储基础架构和容器镜像仓库
 * Kubernetes worker nodes: Kubernetes集群中计算的基本单位，用来调度Pood运行容器
 * Kubernetes control plane: Kubernetes 大脑，API-server、scheduler、controller-manager
 
