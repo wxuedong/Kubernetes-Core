@@ -8,8 +8,8 @@
 
 |   目录   | 涵盖内容  |  
 |  ----  | ----  |  
-|  [Why Kubernetes exists](Chapter1:Why_Kubernetes_exists.md) | | 
-|  [Why the Pod?](Chapter2:Why_the_Pod?.md) |  | 
+|  [Why Kubernetes exists](https://github.com/wxuedong/Kubernetes-Core/blob/main/Chapter1:Why_Kubernetes_exists.md) | | 
+|  [Why the Pod?](https://github.com/wxuedong/Kubernetes-Core/blob/main/Chapter2:Why_the_Pod.md) |  | 
 |  [Let’s build a Pod](Chapter3:Let’s_build_a_Pod.md) |  | 
 |  [Using cgroups for processes in our Pods](Chapter5:CNIs_and_providing_the_Pod_with_a_network.md) |  | 
 |  [Troubleshooting  large-scale network errors](Chapter3:Let’s_build_a_Pod.md) |  | 
