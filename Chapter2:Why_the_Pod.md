@@ -18,5 +18,22 @@
 许多其他Kubernetes API对象要么直接使用Pod，要么是支持Pod的API对象。例如，Deployment使用Pod，以及StatefulSets和DaemonSets。几个不同的高级Kubernetes控制器创建和管理Pod生命周期。控制器是在控制平面上运行的基础组件。内置控制器的示例包括控制器管理器，云管理器和调度程序。但是首先，让我们通过布置Web应用程序，然后将其协调到Kubernetes，Pod和控制平面。
 
 ```
+NOTE：
+您可能会注意到，我们使用控制平面定义运行控制器，controller  manager和scheduler的节点组。它们也被称为Master，但是在本书中，我们将在谈论这些组件时使用control plane
 
 ```
+
+## web application
+
+让我们浏览一个示例Web应用程序，以了解为什么我们需要一个Pod以及如何构建Kubernetes来支持Pod和容器化的应用程序。为了更好地了解Pod是什么，我们将在本章的大部分时间内使用以下示例。
+
+
+Zeus ZAP Energy Drink Company拥有一个在线网站，该网站允许消费者购买其不同的碳酸饮料。该网站由三个不同的层组成：用户界面（UI），中间层（各种微服务）和后端数据库。他们还具有消息传递和队列协议。像Zeus ZAP这样的公司通常具有各种Web前端，包括面向消费者和公司内部系统，构成中间层的不同微服务以及一个或多个后端数据库。这是Zeus Zap的Web应用程序的一个分层：
+
+* Nginx提供的JavaScript前端
+* 两个网络控制层是python微服务，托管了django
+* 后端数据库CockroachDB提供端口6379
+
+<center><img src="./images/web.jpg"></center><br />
+
+
