@@ -131,3 +131,7 @@ spec:
 EOF
 
 ```
+
+```
+$ kubectl create -f pod.yaml
+```
