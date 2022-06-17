@@ -135,3 +135,20 @@ EOF
 ```
 $ kubectl create -f pod.yaml
 ```
+
+先前的语法使用Linux Bash Shell和Kubectl命令运行。kubectl命令是提供命令行界面的二进制文件
+
+在大多数情况下，Pod不会直接部署。取而代之的是，它们是由我们定义的其他API对象自动为我们创建的，例如Deployments，Jobs，StatefulSets和DaemonSets：
+
+* Deployments — Kubernetes群集中最常用的API对象。它们是部署微服务的典型API对象
+* Jobs - Pod 运行任务
+* StatefulSets - 需要特定需求并且通常是数据库等状态应用程序的主机应用程序。
+* DaemonSets - 当我们想在群集的每个节点上运行一个Pod作为“代理”时使用（通常用于涉及网络，存储或日志的系统服务）。
+
+以下是StatefulSet特性：
+
+* 顺序Pod名获取网络唯一标识
+* 始终挂载到同一个 Pod 的持久存储
+* 有序启动、扩展和更新
+
+Docker 镜像名称支持使用名为 latest 的标签。 不要使用镜像名称 mycontainerregistry.io/foo 在生产中，因为这会拉来仓库的最新标记，这是镜像的最新版本。 总是使用版本化标签名称，而不是最新的，甚至更好的 SHA 来安装图片。 镜像标签名称不是不可变的，但图像 SHA 是不可变的。 许多系统失败是因为容器的更新版本不经意间安装。 朋友不要让镜像版本使用最新latest 的标签！
