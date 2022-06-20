@@ -154,5 +154,8 @@ $ kubectl create -f pod.yaml
 Docker 镜像名称支持使用名为 latest 的标签。 不要使用镜像名称 mycontainerregistry.io/foo 在生产中，因为这会拉来仓库的最新标记，这是镜像的最新版本。 总是使用版本化标签名称，而不是最新的，甚至更好的 SHA 来安装图片。 镜像标签名称不是不可变的，但图像 SHA 是不可变的。 许多系统失败是因为容器的更新版本不经意间安装。 朋友不要让镜像版本使用最新latest 的标签！
 
 
-Pod 启动后，可以查看运行在默认 Namespace 中的 Pod一个简单的 kubectl get po 命令。 现在我们已经创建了一个正在运行的容器，它是
-在 Zeus Zap Web 应用程序中部署组件很简单。 只需使用 Docker 或 CRI-O 之类的常用镜像工具来捆绑各种二进制文件及其依赖项转换为不同的镜像，这些镜像只是包含一些文件定义。 在下一章中，我们将介绍如何制作自己的镜像和Pod
+Pod 启动后，可以查看运行在默认 Namespace 中的 Pod一个简单的 kubectl get po 命令。 现在我们已经创建了一个正在运行的容器，它是在 Zeus Zap Web 应用程序中部署组件很简单。 只需使用 Docker 或 CRI-O 之类的常用镜像工具来捆绑各种二进制文件及其依赖项转换为不同的镜像，这些镜像只是包含一些文件定义。 在下一章中，我们将介绍如何制作自己的镜像和Pod
+
+
+而不是让系统调度各种 docker run 命令时服务器启动后，我们定义了四个更高级别的 API 对象，它们创建 Pod 并调用Kubernetes API 服务器。 正如我们所提到的，Pod 很少独立用于安装应用程序在 Kubernetes 上。 用户通常使用更高级别的抽象，例如DeploymentsStatefulSets。 但是我们仍然回到循环控制创建Pod，因为 Deployments 和 StatefulSets创建副本对象，然后创建 Pod。
+
