@@ -159,3 +159,8 @@ Pod 启动后，可以查看运行在默认 Namespace 中的 Pod一个简单的 
 
 而不是让系统调度各种 docker run 命令时服务器启动后，我们定义了四个更高级别的 API 对象，它们创建 Pod 并调用Kubernetes API 服务器。 正如我们所提到的，Pod 很少独立用于安装应用程序在 Kubernetes 上。 用户通常使用更高级别的抽象，例如DeploymentsStatefulSets。 但是我们仍然回到循环控制创建Pod，因为 Deployments 和 StatefulSets创建副本对象，然后创建 Pod。
 
+
+### Linux namespaces
+
+Kubernetes 命名空间（您使用 kubectl create ns 创建的命名空间）不是与 Linux 命名空间相同。 Linux 命名空间是一个 Linux 内核特性，它允许用于内核内部的进程分离。 Pod，在基础级别，是一堆名字特定配置中的空间。 Pod 具有以下 Linux 命名空间
+
